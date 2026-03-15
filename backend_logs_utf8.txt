@@ -1,0 +1,50 @@
+﻿ecotrack_backend  |     return await future
+ecotrack_backend  |            ^^^^^^^^^^^^
+ecotrack_backend  |   File "/usr/local/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 986, in run
+ecotrack_backend  |     result = context.run(func, *args)
+ecotrack_backend  |              ^^^^^^^^^^^^^^^^^^^^^^^^
+ecotrack_backend  |   File "/app/app/auth.py", line 49, in register
+ecotrack_backend  |     hashed_password = security.get_password_hash(user.password)
+ecotrack_backend  |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ecotrack_backend  |   File "/app/app/security.py", line 17, in get_password_hash
+ecotrack_backend  |     return pwd_context.hash(password)
+ecotrack_backend  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+ecotrack_backend  |   File "/usr/local/lib/python3.11/site-packages/passlib/context.py", line 2258, in hash
+ecotrack_backend  |     return record.hash(secret, **kwds)
+ecotrack_backend  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ecotrack_backend  |   File "/usr/local/lib/python3.11/site-packages/passlib/utils/handlers.py", line 779, in hash
+ecotrack_backend  |     self.checksum = self._calc_checksum(secret)
+ecotrack_backend  |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ecotrack_backend  |   File "/usr/local/lib/python3.11/site-packages/passlib/handlers/bcrypt.py", line 591, in _calc_checksum
+ecotrack_backend  |     self._stub_requires_backend()
+ecotrack_backend  |   File "/usr/local/lib/python3.11/site-packages/passlib/utils/handlers.py", line 2254, in _stub_requires_backend
+ecotrack_backend  |     cls.set_backend()
+ecotrack_backend  |   File "/usr/local/lib/python3.11/site-packages/passlib/utils/handlers.py", line 2156, in set_backend
+ecotrack_backend  |     return owner.set_backend(name, dryrun=dryrun)
+ecotrack_backend  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ecotrack_backend  |   File "/usr/local/lib/python3.11/site-packages/passlib/utils/handlers.py", line 2163, in set_backend
+ecotrack_backend  |     return cls.set_backend(name, dryrun=dryrun)
+ecotrack_backend  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ecotrack_backend  |   File "/usr/local/lib/python3.11/site-packages/passlib/utils/handlers.py", line 2188, in set_backend
+ecotrack_backend  |     cls._set_backend(name, dryrun)
+ecotrack_backend  |   File "/usr/local/lib/python3.11/site-packages/passlib/utils/handlers.py", line 2311, in _set_backend
+ecotrack_backend  |     super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+ecotrack_backend  |   File "/usr/local/lib/python3.11/site-packages/passlib/utils/handlers.py", line 2224, in _set_backend
+ecotrack_backend  |     ok = loader(**kwds)
+ecotrack_backend  |          ^^^^^^^^^^^^^^
+ecotrack_backend  |   File "/usr/local/lib/python3.11/site-packages/passlib/handlers/bcrypt.py", line 626, in _load_backend_mixin
+ecotrack_backend  |     return mixin_cls._finalize_backend_mixin(name, dryrun)
+ecotrack_backend  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ecotrack_backend  |   File "/usr/local/lib/python3.11/site-packages/passlib/handlers/bcrypt.py", line 421, in _finalize_backend_mixin
+ecotrack_backend  |     if detect_wrap_bug(IDENT_2A):
+ecotrack_backend  |        ^^^^^^^^^^^^^^^^^^^^^^^^^
+ecotrack_backend  |   File "/usr/local/lib/python3.11/site-packages/passlib/handlers/bcrypt.py", line 380, in detect_wrap_bug
+ecotrack_backend  |     if verify(secret, bug_hash):
+ecotrack_backend  |        ^^^^^^^^^^^^^^^^^^^^^^^^
+ecotrack_backend  |   File "/usr/local/lib/python3.11/site-packages/passlib/utils/handlers.py", line 792, in verify
+ecotrack_backend  |     return consteq(self._calc_checksum(secret), chk)
+ecotrack_backend  |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ecotrack_backend  |   File "/usr/local/lib/python3.11/site-packages/passlib/handlers/bcrypt.py", line 655, in _calc_checksum
+ecotrack_backend  |     hash = _bcrypt.hashpw(secret, config)
+ecotrack_backend  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ecotrack_backend  | ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])

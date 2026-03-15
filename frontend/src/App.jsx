@@ -7,19 +7,36 @@ import StatCard from './components/StatCard';
 import RecentActivity from './components/RecentActivity';
 import Profile from './components/Profile';
 import Settings from './components/Settings';
-
+import Login from './components/Login';
 
 const App = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [token, setToken] = useState(localStorage.getItem('ecotrack_token'));
+
+  const handleLogout = () => {
+    localStorage.removeItem('ecotrack_token');
+    setToken(null);
+  };
 
   useEffect(() => {
+    if (!token) {
+        setLoading(false);
+        return;
+    }
+
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/stats');
+        const response = await axios.get('http://localhost:8000/stats', {
+            headers: { Authorization: `Bearer ${token}` }
+        });
         setData(response.data);
       } catch (error) {
+        if (error.response?.status === 401) {
+            handleLogout();
+            return;
+        }
         console.error("Using mock data as backend is unreachable");
         setData([
           { metric_name: "Carbon Offset", value: 450.5, category: "Environment", timestamp: "2024-03-12T10:00:00" },
@@ -31,7 +48,7 @@ const App = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [token]);
 
   const renderContent = () => {
     switch(activeTab) {
@@ -136,6 +153,10 @@ const App = () => {
     )
   }
 
+  if (!token) {
+    return <Login setToken={setToken} />;
+  }
+
   const headerInfo = getHeaderInfo();
 
   return (
@@ -147,6 +168,7 @@ const App = () => {
           title={headerInfo.title} 
           subtitle={headerInfo.subtitle} 
           setActiveTab={setActiveTab} 
+          handleLogout={handleLogout}
         />
 
         {renderContent()}

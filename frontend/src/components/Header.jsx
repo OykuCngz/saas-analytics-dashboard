@@ -1,7 +1,7 @@
 import React from 'react';
-import { Search, Bell, User } from 'lucide-react';
+import { Search, Bell, User, LogOut } from 'lucide-react';
 
-const Header = ({ title, subtitle, setActiveTab }) => {
+const Header = ({ title, subtitle, setActiveTab, handleLogout }) => {
   return (
     <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
       <div>
@@ -20,10 +20,19 @@ const Header = ({ title, subtitle, setActiveTab }) => {
             </button>
             <button 
               onClick={() => setActiveTab('profile')}
-              className="p-2 bg-[#1e293b] border border-slate-700 rounded-lg hover:bg-slate-700 transition-colors"
+              className="p-2 bg-[#1e293b] border border-slate-700 rounded-lg hover:bg-slate-700 transition-colors title='Profile'"
             >
                 <User size={20} className="text-slate-400" />
             </button>
+            {handleLogout && (
+              <button 
+                onClick={handleLogout}
+                className="p-2 bg-red-500/10 border border-red-500/20 text-red-500 rounded-lg hover:bg-red-500/20 transition-colors"
+                title="Logout"
+              >
+                  <LogOut size={20} />
+              </button>
+            )}
         </div>
       </div>
     </header>
