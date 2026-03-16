@@ -38,7 +38,6 @@ def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
     
-    # Check company
     company = db.query(models.Company).filter(models.Company.name == user.company_name).first()
     if not company:
         company = models.Company(name=user.company_name)

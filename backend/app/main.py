@@ -4,8 +4,10 @@ from sqlalchemy.orm import Session
 from typing import List
 from . import models, schemas, database, auth, cache
 from .database import engine, get_db
+import pandas as pd
+import io
+from fastapi import UploadFile, File
 
-# Create tables
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
@@ -14,10 +16,9 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# CORS configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # In production, replace with specific origins
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -36,10 +37,8 @@ def read_root():
 @app.get("/stats", response_model=List[schemas.AnalyticsEvent], tags=["Analytics"])
 @cache.cache_response(expire_seconds=300)
 async def get_stats(db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
-
     events = db.query(models.AnalyticsEvent).filter(models.AnalyticsEvent.company_id == current_user.company_id).all()
     if not events:
-        # Seed initial data if DB is empty for this company
         initial_data = [
             models.AnalyticsEvent(metric_name="Carbon Offset", value=450.5, category="Environment", company_id=current_user.company_id),
             models.AnalyticsEvent(metric_name="Energy Saved", value=1200.0, category="Logistics", company_id=current_user.company_id),
@@ -49,7 +48,6 @@ async def get_stats(db: Session = Depends(get_db), current_user: models.User = D
         db.commit()
         events = db.query(models.AnalyticsEvent).filter(models.AnalyticsEvent.company_id == current_user.company_id).all()
     
-    # Convert SQLAlchemy objects to dicts for JSON serialization in cache decorator
     return [schemas.AnalyticsEvent.from_orm(e).dict() for e in events]
 
 @app.post("/events", response_model=schemas.AnalyticsEvent, tags=["Analytics"])
@@ -58,10 +56,7 @@ def create_event(event: schemas.AnalyticsEventCreate, db: Session = Depends(get_
     db.add(db_event)
     db.commit()
     db.refresh(db_event)
-    
-    # Invalidate cache for this company so the dashboard reflects the new data
     cache.invalidate_company_cache(current_user.company_id)
-    
     return db_event
 
 @app.get("/recent-activity", response_model=schemas.AnalyticsEventPaginated, tags=["Analytics"])
@@ -84,17 +79,12 @@ async def get_recent_activity(
     total = query.count()
     items = query.order_by(models.AnalyticsEvent.timestamp.desc()).offset((page - 1) * size).limit(size).all()
     
-    result = {
+    return {
         "items": [schemas.AnalyticsEvent.from_orm(i).dict() for i in items],
         "total": total,
         "page": page,
         "size": size
     }
-    return result
-
-import pandas as pd
-import io
-from fastapi import UploadFile, File
 
 @app.post("/upload-csv", tags=["Analytics"])
 async def upload_csv(
@@ -124,8 +114,5 @@ async def upload_csv(
     
     db.add_all(events)
     db.commit()
-    
-    # Invalidate cache
     cache.invalidate_company_cache(current_user.company_id)
-    
     return {"message": f"Successfully uploaded {len(events)} events"}

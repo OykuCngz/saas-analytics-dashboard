@@ -11,7 +11,7 @@ import Profile from './components/Profile';
 import Settings from './components/Settings';
 import Login from './components/Login';
 import BulkUpload from './components/BulkUpload';
-import { Plus, Database } from 'lucide-react';
+import { Plus, Database, Upload } from 'lucide-react';
 
 const App = () => {
   const [data, setData] = useState([]);
@@ -57,6 +57,7 @@ const App = () => {
   useEffect(() => {
     fetchData();
   }, [token]);
+
   const renderContent = () => {
     return (
       <AnimatePresence mode="wait">
@@ -76,7 +77,6 @@ const App = () => {
               default:
                 return (
                   <>
-                    {/* Action Bar */}
                     <div className="flex justify-between items-center mb-6">
                        <h3 className="text-xl font-bold text-white flex items-center gap-2">
                           <Database className="text-emerald-500" size={24} />
@@ -95,7 +95,6 @@ const App = () => {
                        </div>
                     </div>
 
-                    {/* Stats Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                       {data.map((item, idx) => (
                         <StatCard 
@@ -108,7 +107,6 @@ const App = () => {
                       ))}
                     </div>
 
-                    {/* Charts Section */}
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                       <div className="bg-[#1e293b] p-6 rounded-2xl border border-slate-700 shadow-xl transition-all hover:border-slate-600">
                         <h3 className="text-lg font-semibold mb-6 text-white flex items-center gap-2">
@@ -160,7 +158,6 @@ const App = () => {
                       </div>
                     </div>
 
-                    {/* Activity Table */}
                     <RecentActivity data={data} />
                   </>
                 );
@@ -224,7 +221,6 @@ const App = () => {
 
         {renderContent()}
 
-        {/* Footer info */}
         <footer className="mt-12 text-center text-slate-500 text-sm border-t border-slate-800 pt-8">
             <p>© 2024 EcoTrack Enterprise • Made for Sustainability</p>
         </footer>

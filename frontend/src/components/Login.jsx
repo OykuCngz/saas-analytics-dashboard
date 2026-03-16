@@ -15,9 +15,8 @@ const Login = ({ setToken }) => {
     
     try {
       if (isLogin) {
-        // Login
         const params = new URLSearchParams();
-        params.append('username', email); // OAuth2 expects username
+        params.append('username', email);
         params.append('password', password);
         
         const res = await axios.post('http://localhost:8000/login', params);
@@ -27,13 +26,12 @@ const Login = ({ setToken }) => {
           style: { background: '#1e293b', color: '#fff', border: '1px solid #334155' }
         });
       } else {
-        // Register
         await axios.post('http://localhost:8000/register', {
           email,
           password,
           company_name: companyName
         });
-        setIsLogin(true); // Switch to login after successful register
+        setIsLogin(true);
         toast.success('Registration successful! Please login.', {
           duration: 5000,
           style: { background: '#1e293b', color: '#fff', border: '1px solid #334155' }

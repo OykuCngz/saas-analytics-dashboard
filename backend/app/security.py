@@ -3,10 +3,9 @@ from typing import Optional
 from jose import JWTError, jwt
 import bcrypt
 
-# Normally, load from env var
 SECRET_KEY = "super_secret_key_for_ecotrack_enterprise_dashboard_app"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 300 # Set to 5 hours for easy testing
+ACCESS_TOKEN_EXPIRE_MINUTES = 300
 
 def verify_password(plain_password, hashed_password):
     if isinstance(hashed_password, str):

@@ -114,7 +114,6 @@ const RecentActivity = () => {
         </table>
       </div>
 
-      {/* Pagination Controls */}
       <div className="p-4 border-t border-slate-700 flex flex-col md:flex-row justify-between items-center gap-4 bg-slate-800/20">
         <div className="text-sm text-slate-400">
           Showing <span className="font-medium text-slate-200">{items.length > 0 ? (page - 1) * size + 1 : 0}</span> to <span className="font-medium text-slate-200">{Math.min(page * size, total)}</span> of <span className="font-medium text-slate-200">{total}</span> results
