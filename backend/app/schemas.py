@@ -52,3 +52,9 @@ class AnalyticsEvent(AnalyticsEventBase):
 
     class Config:
         from_attributes = True
+
+class AnalyticsEventPaginated(BaseModel):
+    items: List[AnalyticsEvent]
+    total: int
+    page: int
+    size: int

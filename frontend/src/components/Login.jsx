@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { toast } from 'react-hot-toast';
 
 const Login = ({ setToken }) => {
   const [isLogin, setIsLogin] = useState(true);
@@ -22,6 +23,9 @@ const Login = ({ setToken }) => {
         const res = await axios.post('http://localhost:8000/login', params);
         setToken(res.data.access_token);
         localStorage.setItem('ecotrack_token', res.data.access_token);
+        toast.success('Welcome back to EcoTrack!', {
+          style: { background: '#1e293b', color: '#fff', border: '1px solid #334155' }
+        });
       } else {
         // Register
         await axios.post('http://localhost:8000/register', {
@@ -30,10 +34,17 @@ const Login = ({ setToken }) => {
           company_name: companyName
         });
         setIsLogin(true); // Switch to login after successful register
-        alert("Registration successful! Please login.");
+        toast.success('Registration successful! Please login.', {
+          duration: 5000,
+          style: { background: '#1e293b', color: '#fff', border: '1px solid #334155' }
+        });
       }
     } catch (err) {
-      setError(err.response?.data?.detail || "An error occurred");
+      const msg = err.response?.data?.detail || "An error occurred";
+      setError(msg);
+      toast.error(msg, {
+        style: { background: '#1e293b', color: '#fff', border: '1px solid #334155' }
+      });
     }
   };
 
